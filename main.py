@@ -50,7 +50,7 @@ def get_next_id(data):
 
 def get_time():
     now = datetime.now().strftime("%Y-%m-%d || %H:%M")
-    print(now)
+
 
 def add_task(description):
     """
@@ -87,8 +87,10 @@ def update_task(id, desc):
     Returns:
         bool: True if the task was found and updated, False otherwise.
     """
-    print("test commit")
-    pass
+    
+    with open(FILENAME, "r") as file:
+        data = json.load(file)
+
 
 def delete_task(id):
     """
@@ -99,6 +101,43 @@ def delete_task(id):
 
     pass
 
+def get_tasks():
+    with open(FILENAME, 'r') as file:
+        data = json.load(file)
+        tasks = (data["tasks"]["incomplete"] + data["tasks"]["inProgress"] + data["tasks"]["completed"])
+        tlist = []
+
+        for task in tasks:
+            tlist.append(task)
+        
+    return tlist
 
 
-add_task("Accumalte a total of 20 million php asset in 10 years")
+def find_task(id: int) -> bool:
+    pass
+
+
+def main():
+    print(
+        "Welcome to  Task Tracker (CLI)"
+        "\nActions:"
+        "\n1. Add task"
+        "\n2. Update task"
+        "\n3. Delete task"
+        "\n4. Mark task as done"
+        "\n5. View ALL tasks"
+        "\n6. View COMPLETED tasks"
+        "\n7. View INCOMPLETE tasks"
+        "\n8. View IN-PROGRESS tasks"
+    )
+
+    action = int(input("Type 1-8: "))
+
+    match action:
+        case 5:
+            items = get_tasks()
+
+            for task in items:
+                print(task)
+
+main()
