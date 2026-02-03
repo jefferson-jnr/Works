@@ -104,7 +104,7 @@ def get_tasks():
 
     return tlist
 
-def list_tasks(data) -> None:
+def list_tasks(data:dict) -> None:
     for index, task in enumerate(data, start=1):
         print(
             f"{index}. ID: {task['id']:<3}||"
@@ -115,7 +115,7 @@ def list_tasks(data) -> None:
         )
 
 
-def get_specific_tasks(key):
+def get_specific_tasks(key: str) -> dict:
     with open(FILENAME, "r") as file:
         data = json.load(file)
         
@@ -125,6 +125,8 @@ def get_specific_tasks(key):
 
         for task in tasks:
             tlist.append(task)
+        
+        return tlist
 
 
 # Not sure what to do with this one.
@@ -229,5 +231,16 @@ def main():
 
         case 5:
             list_tasks(get_tasks())
+
+        case 6:
+            list_tasks(get_specific_tasks('completed'))
+
+        case 7:
+            list_tasks(get_specific_tasks('incomplete'))
+
+        case 8:
+            list_tasks(get_specific_tasks('inProgress'))
+
+
 
 main()
