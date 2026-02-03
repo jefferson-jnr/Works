@@ -60,7 +60,7 @@ def update_task(task_id: int, desc: str) ->  bool:
         for task in tasks:
             if task["id"] == task_id:
                 task["description"] = desc
-                print(task_id)
+                
 
                 with open(FILENAME, "w") as file:
                     json.dump(data, file, indent=4)
@@ -69,14 +69,24 @@ def update_task(task_id: int, desc: str) ->  bool:
         return False
 
 
-def delete_task(id):
-    """
-    Delete task by task's unique ID
+def delete_task(sid):
+    with open(FILENAME, "r") as file:
+        data = json.load(file)
 
-    Returns True if found and deleted, False otherwise.
-    """
+    lists_to_check = [
+        data["tasks"]["completed"],
+        data["tasks"]["incomplete"],
+        data["tasks"]["inProgress"]
+    ]
 
-    pass
+    for task_list in lists_to_check:
+        for idx, task in enumerate(task_list):
+            if task['id'] == sid:
+                del task_list[idx]  # ← deletes from ORIGINAL list
+                with open(FILENAME, 'w') as file:
+                    json.dump(data, file, indent=4)
+                return True
+    return False
 
 
 def get_tasks():
@@ -94,11 +104,54 @@ def get_tasks():
 
     return tlist
 
+def list_tasks(data) -> None:
+    for index, task in enumerate(data, start=1):
+        print(
+            f"{index}. ID: {task['id']:<3}||"
+            f"{task['description']:<65}||"
+            f"{task['status']:^11}||"
+            f"{task['createdAt']:^11}||"
+            f"{task['updatedAt']:^11}||"
+        )
+
+
+def get_specific_tasks(key):
+    with open(FILENAME, "r") as file:
+        data = json.load(file)
+        
+        tasks = data['tasks'][key]
+
+        tlist = []
+
+        for task in tasks:
+            tlist.append(task)
+
+
 # Not sure what to do with this one.
 def find_task(task_id: int, data: dict) -> dict:
     for item in data:
         if item["id"] == task_id:
             return item
+        return False
+
+def mark_task(task_id: int, new_status:str) -> None:
+    with open(FILENAME, "r") as file:
+        data = json.load(file)
+        tasks = (
+            data["tasks"]["incomplete"]
+            + data["tasks"]["inProgress"]
+            + data["tasks"]["completed"]
+        )
+
+        for task in tasks:
+            if task["id"] == task_id:
+                task["status"] = new_status
+
+
+                with open(FILENAME, "w") as file:
+                    json.dump(data, file, indent=4)
+                    return True
+
         return False
 
 
@@ -107,9 +160,9 @@ def main():
         "Welcome to  Task Tracker (CLI)"
         "\nActions:"
         "\n1. Add task"  # done
-        "\n2. Update task"
-        "\n3. Delete task"
-        "\n4. Mark task as done"
+        "\n2. Update task" # done
+        "\n3. Delete task" # done
+        "\n4. Mark task as done" #done
         "\n5. View ALL tasks"  # done
         "\n6. View COMPLETED tasks"
         "\n7. View INCOMPLETE tasks"
@@ -124,6 +177,8 @@ def main():
             add_task(tdesc)
 
         case 2:
+            list_tasks()
+
             print("Type the ID of the task you want to update.")
             tid = int(input("Task ID: "))
             new_desc = input("New task description: ")
@@ -138,15 +193,41 @@ def main():
                     f"\nNo task was found with the id of {tid}"
                 )
 
-        case 5:
-            for index, task in enumerate(get_tasks(), start=1):
+        case 3:
+            print("Type the ID of the task you want to delete.")
+            tid = int(input("Task ID: "))
+            deleted = delete_task(tid)
+
+            if deleted:
+                print(f"Deleted successfully")
+            else:
+                print("Invalid id")
+
+        case 4:
+            print("Type the ID of the task you want to mark as done/inprogress.")
+            tid = int(input("Task ID: "))
+            new_status = int(input(
+                'Type 1 to mark as "DONE"'
+                '\nType 2 to mark as "INPROGRESS\n'
+                ))
+
+            if new_status == 1:
+                new_status = "Done"
+            elif new_status == 2:
+                new_status = "INPROGRESS"
+
+            if mark_task(tid, new_status):
                 print(
-                    f"{index}. ID: {task['id']:<3}||"
-                    f"{task['description']:<65}||"
-                    f"{task['status']:^11}||"
-                    f"{task['createdAt']:^11}||"
-                    f"{task['updatedAt']:^11}||"
+                    f"Mark task with the ID of: {tid}"
+                    f"\nNew task status: {new_status}"
+                    )
+            else:
+                print(
+                    f"Invalid ID!"
+                    f"\nNo task was found with the id of {tid}"
                 )
 
+        case 5:
+            list_tasks(get_tasks())
 
 main()

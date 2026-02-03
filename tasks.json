@@ -1,32 +1,29 @@
 {
     "tasks": {
-        "completed": [
-            {
-                "id": 13,
-                "description": "testicle",
-                "status": "Todo",
-                "createdAt": "2026-02-02  22:35",
+        "completed": [            {
+                "id": 15,
+                "description": "task 2",
+                "status": "Done",
+                "createdAt": "2026-02-03  23:41",
                 "updatedAt": "N/A"
-            }
-        ],
+            }],
         "incomplete": [
             {
-                "id": 69,
-                "description": "test",
+                "id": 14,
+                "description": "task 1",
                 "status": "Todo",
-                "createdAt": "2026-02-02  22:35",
+                "createdAt": "2026-02-03  23:41",
                 "updatedAt": "N/A"
             }
+
         ],
-        "inProgress": [
-            {
-                "id": 67,
-                "description": "pop ",
-                "status": "Todo",
-                "createdAt": "2026-02-02  22:35",
+        "inProgress": [{
+                "id": 16,
+                "description": "task 3",
+                "status": "INPROGRESS",
+                "createdAt": "2026-02-03  23:42",
                 "updatedAt": "N/A"
-            }
-        ],
-        "nextId": 14
+            }],
+        "nextId": 17
     }
 }
